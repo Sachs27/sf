@@ -2,6 +2,8 @@ project(sf)
 
 cmake_minimum_required(VERSION 2.8)
 
+add_definitions(-g -Wall)
+
 include_directories(include)
 
 aux_source_directory(src SF_SRC)

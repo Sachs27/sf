@@ -11,7 +11,7 @@ static void increae_capcity(struct sf_array *a) {
     int onalloc = a->nalloc;
 
     a->nalloc <<= 1;
-    a->elts = realloc(a->elts, a->nalloc);
+    a->elts = realloc(a->elts, a->nalloc * a->size);
     assert(a->elts != NULL);
     dprintf("sf_array[%"PRIuPTR"]: increased capcity from %"PRIu32
             " to %"PRIu32".\n",
@@ -34,15 +34,20 @@ struct sf_array *sf_array_create(size_t size, uint32_t nalloc) {
 }
 
 void sf_array_destroy(struct sf_array *a, sf_array_destructor_t *destructor) {
-    int i;
+    sf_array_clear(a, destructor);
+    free(a->elts);
+    free(a);
+}
 
+void sf_array_clear(struct sf_array *a, sf_array_destructor_t *destructor) {
     if (destructor) {
+        int i;
+
         for (i = 0; i < a->nelts; ++i) {
             destructor(SF_ARRAY_NTH(a, i));
         }
     }
-    free(a->elts);
-    free(a);
+    a->nelts = 0;
 }
 
 void sf_array_push(struct sf_array *a, void *elt) {

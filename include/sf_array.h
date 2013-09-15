@@ -21,6 +21,7 @@ struct sf_array {
 
 struct sf_array *sf_array_create(size_t size, uint32_t nalloc);
 void sf_array_destroy(struct sf_array *a, sf_array_destructor_t *destructor);
+void sf_array_clear(struct sf_array *a, sf_array_destructor_t *destructor);
 void sf_array_push(struct sf_array *a, void *elt);
 void sf_array_push_n(struct sf_array *a, uint32_t n, void *elt);
 
