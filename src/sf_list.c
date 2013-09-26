@@ -49,11 +49,11 @@ void sf_list_destroy(struct sf_list *l, sf_list_destructor_t *destructor) {
     free(l);
 }
 
-void sf_list_push(struct sf_list * l, void *elt) {
+void *sf_list_push(struct sf_list * l, void *elt) {
     struct sf_list_node *node;
 
     if (elt == NULL) {
-        return;
+        return NULL;
     }
 
     node = malloc(sizeof(*node) + l->size);
@@ -64,13 +64,15 @@ void sf_list_push(struct sf_list * l, void *elt) {
     insert_node(l->head->prev, node, l->head);
 
     ++l->nelts;
+
+    return node->elt;
 }
 
-void sf_list_push_front(struct sf_list * l, void *elt) {
+void *sf_list_push_front(struct sf_list * l, void *elt) {
     struct sf_list_node *node;
 
     if (elt == NULL) {
-        return;
+        return NULL;
     }
 
     node = malloc(sizeof(*node) + l->size);
@@ -81,6 +83,8 @@ void sf_list_push_front(struct sf_list * l, void *elt) {
     insert_node(l->head, node, l->head->next);
 
     ++l->nelts;
+
+    return node->elt;
 }
 
 void sf_list_pop(struct sf_list * l, void *o_elt) {

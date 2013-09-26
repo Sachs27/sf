@@ -50,8 +50,12 @@ void sf_array_clear(struct sf_array *a, sf_array_destructor_t *destructor) {
     a->nelts = 0;
 }
 
-void sf_array_push(struct sf_array *a, void *elt) {
+void *sf_array_push(struct sf_array *a, void *elt) {
     void *dst;
+
+    if (elt == NULL) {
+        return NULL;
+    }
 
     if (a->nelts == a->nalloc) {
         /* the array is full */
@@ -61,4 +65,6 @@ void sf_array_push(struct sf_array *a, void *elt) {
     dst = SF_ARRAY_NTH(a, a->nelts);
     memcpy(dst, elt, a->size);
     ++a->nelts;
+
+    return dst;
 }

@@ -25,8 +25,8 @@ struct sf_list {
 
 struct sf_list *sf_list_create(size_t size);
 void sf_list_destroy(struct sf_list *l, sf_list_destructor_t *destructor);
-void sf_list_push(struct sf_list * l, void *elt);
-void sf_list_push_front(struct sf_list * l, void *elt);
+void *sf_list_push(struct sf_list * l, void *elt);
+void *sf_list_push_front(struct sf_list * l, void *elt);
 void sf_list_pop(struct sf_list * l, void *o_elt);
 void sf_list_pop_front(struct sf_list * l, void *o_elt);
 
@@ -40,6 +40,10 @@ void sf_list_pop_front(struct sf_list * l, void *o_elt);
         name = (type *) __sf_list_node__->elt
 
 #define SF_LIST_END() } } while(0)
+
+#define SF_LIST_HEAD(l) ((void *) (l)->head->next->elt)
+
+#define SF_LIST_TAIL(l) ((void *) (l)->head->prev->elt)
 
 
 #endif /* SF_LIST_H */
