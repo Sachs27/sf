@@ -33,11 +33,10 @@ void sf_list_pop_front(struct sf_list * l, void *o_elt);
 
 #define SF_LIST_BEGIN(l, type, name) do {                       \
     assert(sizeof(type) == (l)->size);                          \
-    type *name;                                                 \
     struct sf_list_node *__sf_list_node__ = (l)->head->next;    \
     for (; __sf_list_node__ != (l)->head;                       \
            __sf_list_node__ = __sf_list_node__->next) {         \
-        name = (type *) __sf_list_node__->elt
+        type *name = (type *) __sf_list_node__->elt
 
 #define SF_LIST_END() } } while(0)
 

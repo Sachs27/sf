@@ -30,10 +30,9 @@ void sf_array_pop(struct sf_array *a, void *o_elt);
 
 #define SF_ARRAY_BEGIN(a, type, name) do {                  \
     assert(sizeof(type) == (a)->size);                      \
-    type *name;                                             \
     uint32_t __sf_array_i__ = 0;                            \
     for (; __sf_array_i__ < (a)->nelts; ++__sf_array_i__) { \
-        name = SF_ARRAY_NTH(a, __sf_array_i__)
+        type *name = SF_ARRAY_NTH(a, __sf_array_i__)
 
 #define SF_ARRAY_END() } } while(0)
 
