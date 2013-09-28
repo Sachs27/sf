@@ -49,7 +49,7 @@ void sf_list_destroy(struct sf_list *l, sf_list_destructor_t *destructor) {
     free(l);
 }
 
-void *sf_list_push(struct sf_list * l, void *elt) {
+void *sf_list_push(struct sf_list * l, const void *elt) {
     struct sf_list_node *node;
 
     if (elt == NULL) {
@@ -68,7 +68,7 @@ void *sf_list_push(struct sf_list * l, void *elt) {
     return node->elt;
 }
 
-void *sf_list_push_front(struct sf_list * l, void *elt) {
+void *sf_list_push_front(struct sf_list * l, const void *elt) {
     struct sf_list_node *node;
 
     if (elt == NULL) {
@@ -90,23 +90,33 @@ void *sf_list_push_front(struct sf_list * l, void *elt) {
 void sf_list_pop(struct sf_list * l, void *o_elt) {
     struct sf_list_node *node = l->head->prev;
 
+    if (l->nelts == 0) {
+        return;
+    }
+
     remove_node(node);
     --l->nelts;
 
     if (o_elt) {
         memcpy(o_elt, node->elt, l->size);
     }
+
     free(node);
 }
 
 void sf_list_pop_front(struct sf_list * l, void *o_elt) {
     struct sf_list_node *node = l->head->next;
 
+    if (l->nelts == 0) {
+        return;
+    }
+
     remove_node(node);
     --l->nelts;
 
     if (o_elt) {
         memcpy(o_elt, node->elt, l->size);
     }
+
     free(node);
 }

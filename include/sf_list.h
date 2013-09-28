@@ -25,8 +25,8 @@ struct sf_list {
 
 struct sf_list *sf_list_create(size_t size);
 void sf_list_destroy(struct sf_list *l, sf_list_destructor_t *destructor);
-void *sf_list_push(struct sf_list * l, void *elt);
-void *sf_list_push_front(struct sf_list * l, void *elt);
+void *sf_list_push(struct sf_list * l, const void *elt);
+void *sf_list_push_front(struct sf_list * l, const void *elt);
 void sf_list_pop(struct sf_list * l, void *o_elt);
 void sf_list_pop_front(struct sf_list * l, void *o_elt);
 

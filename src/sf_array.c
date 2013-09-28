@@ -50,7 +50,7 @@ void sf_array_clear(struct sf_array *a, sf_array_destructor_t *destructor) {
     a->nelts = 0;
 }
 
-void *sf_array_push(struct sf_array *a, void *elt) {
+void *sf_array_push(struct sf_array *a, const void *elt) {
     void *dst;
 
     if (elt == NULL) {
@@ -67,4 +67,16 @@ void *sf_array_push(struct sf_array *a, void *elt) {
     ++a->nelts;
 
     return dst;
+}
+
+void sf_array_pop(struct sf_array *a, void *o_elt) {
+    if (a->nelts == 0) {
+        return;
+    }
+
+    if (o_elt) {
+        memcpy(o_elt, SF_ARRAY_NTH(a, a->nelts), a->size);
+    }
+
+    --a->nelts;
 }
