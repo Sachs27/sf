@@ -40,6 +40,13 @@ void sf_list_pop_front(struct sf_list * l, void *o_elt);
 
 #define SF_LIST_END() } } while(0)
 
+#define SF_LIST_BEGIN_R(l, type, name) do {                     \
+    assert(sizeof(type) == (l)->size);                          \
+    struct sf_list_node *__sf_list_node__ = (l)->head->prev;    \
+    for(; __sf_list_node__ != (l)->head;                        \
+          __sf_list_node__ = __sf_list_node__->prev) {          \
+        type *name = (type *) __sf_list_node__->elt
+
 #define SF_LIST_HEAD(l) ((void *) (l)->head->next->elt)
 
 #define SF_LIST_TAIL(l) ((void *) (l)->head->prev->elt)
