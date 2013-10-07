@@ -26,7 +26,8 @@ void *sf_array_push(struct sf_array *a, const void *elt);
 void sf_array_pop(struct sf_array *a, void *o_elt);
 
 
-#define SF_ARRAY_NTH(a, n) ((void *) ((char *) (a)->elts + (n) * (a)->size))
+#define SF_ARRAY_NTH(a, n) (assert(n < (a)->nelts),         \
+                            (void *) ((char *) (a)->elts + (n) * (a)->size))
 
 #define SF_ARRAY_HEAD(a) SF_ARRAY_NTH(a, 0)
 

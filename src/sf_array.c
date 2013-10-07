@@ -62,7 +62,7 @@ void *sf_array_push(struct sf_array *a, const void *elt) {
         increae_capcity(a);
     }
 
-    dst = SF_ARRAY_NTH(a, a->nelts);
+    dst = (char *) a->elts + a->nelts * a->size;
     memcpy(dst, elt, a->size);
     ++a->nelts;
 
