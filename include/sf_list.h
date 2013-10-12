@@ -19,7 +19,8 @@ struct sf_list_node {
 struct sf_list {
     size_t                  size;   /* element's size in bytes */
     uint32_t                nelts;
-    struct sf_list_node     head[];
+    struct sf_list_node     head[]; /* if list is empty,
+                                     * head->prev == head->next == head */
 };
 
 
@@ -31,25 +32,35 @@ void sf_list_pop(struct sf_list * l, void *o_elt);
 void sf_list_pop_front(struct sf_list * l, void *o_elt);
 
 
-#define SF_LIST_BEGIN(l, type, name) do {                       \
-    assert(sizeof(type) == (l)->size);                          \
-    struct sf_list_node *__sf_list_node__ = (l)->head->next;    \
-    for (; __sf_list_node__ != (l)->head;                       \
-           __sf_list_node__ = __sf_list_node__->next) {         \
-        type *name = (type *) __sf_list_node__->elt
+#define SF_LIST_HEAD(l) ({                          \
+    struct sf_list *__sf_list_head_l__ = (l);       \
+    (void *) __sf_list_head_l__->head->next->elt;   \
+})
+
+#define SF_LIST_TAIL(l) ({                          \
+    struct sf_list *__sf_list_tail_l__ = (l);       \
+    (void *) __sf_list_tail_l__->head->prev->elt;   \
+})
+
+#define SF_LIST_BEGIN(l, type, name) do {                           \
+    struct sf_list         *__sf_list_begin_l__ = (l);              \
+    struct sf_list_node    *__sf_list_begin_node__;                 \
+    assert(sizeof(type) == __sf_list_begin_l__->size);              \
+    for (__sf_list_begin_node__  = __sf_list_begin_l__->head->next; \
+         __sf_list_begin_node__ != __sf_list_begin_l__->head;       \
+         __sf_list_begin_node__  = __sf_list_begin_node__->next) {  \
+        type *name = (type *) __sf_list_begin_node__->elt
 
 #define SF_LIST_END() } } while(0)
 
-#define SF_LIST_BEGIN_R(l, type, name) do {                     \
-    assert(sizeof(type) == (l)->size);                          \
-    struct sf_list_node *__sf_list_node__ = (l)->head->prev;    \
-    for(; __sf_list_node__ != (l)->head;                        \
-          __sf_list_node__ = __sf_list_node__->prev) {          \
-        type *name = (type *) __sf_list_node__->elt
-
-#define SF_LIST_HEAD(l) ((void *) (l)->head->next->elt)
-
-#define SF_LIST_TAIL(l) ((void *) (l)->head->prev->elt)
+#define SF_LIST_BEGIN_R(l, type, name) do {                             \
+    struct sf_list         *__sf_list_begin_r_l__ = (l);                \
+    struct sf_list_node    *__sf_list_begin_r_node__;                   \
+    assert(sizeof(type) == (l)->size);                                  \
+    for(__sf_list_begin_r_node__  = __sf_list_begin_r_l__->head->prev;  \
+        __sf_list_begin_r_node__ != __sf_list_begin_r_l__->head;        \
+        __sf_list_begin_r_node__  = __sf_list_begin_r_node__->prev) {   \
+        type *name = (type *) __sf_list_begin_r_node__->elt
 
 
 #endif /* SF_LIST_H */
