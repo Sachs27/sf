@@ -3,8 +3,8 @@
 
 
 #include <assert.h>
-#include <stdlib.h>
-#include <inttypes.h>
+#include <stddef.h>
+#include <stdint.h>
 
 
 typedef void (sf_list_destructor_t)(void *);

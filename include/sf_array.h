@@ -3,7 +3,8 @@
 
 
 #include <assert.h>
-#include <inttypes.h>
+#include <stddef.h>
+#include <stdint.h>
 
 
 #define SF_ARRAY_NALLOC 4
