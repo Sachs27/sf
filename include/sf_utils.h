@@ -11,6 +11,10 @@
     b = __sf_swap_tmp__;            \
 } while (0)
 
+#define sf_container_of(ptr, type, member) ({                               \
+     const typeof(((type *) 0)->member) *__sf_container_of_ptr__ = (ptr);   \
+     (type *) ((char *) __sf_container_of_ptr__ - offsetof(type,member));   \
+})
 
 uint32_t sf_uint_next_power_of_two(uint32_t n);
 

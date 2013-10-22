@@ -33,19 +33,19 @@ void sf_list_pop_front(struct sf_list * l, void *o_elt);
 
 
 #define SF_LIST_HEAD(l) ({                          \
-    struct sf_list *__sf_list_head_l__ = (l);       \
+    const struct sf_list *__sf_list_head_l__ = (l); \
     (void *) __sf_list_head_l__->head->next->elt;   \
 })
 
 #define SF_LIST_TAIL(l) ({                          \
-    struct sf_list *__sf_list_tail_l__ = (l);       \
+    const struct sf_list *__sf_list_tail_l__ = (l); \
     (void *) __sf_list_tail_l__->head->prev->elt;   \
 })
 
 #define SF_LIST_BEGIN(l, type, name) do {                           \
-    struct sf_list         *__sf_list_begin_l__ = (l);              \
-    struct sf_list_node    *__sf_list_begin_node__;                 \
-    assert(sizeof(type) == __sf_list_begin_l__->size);              \
+    const struct sf_list         *__sf_list_begin_l__ = (l);        \
+    const struct sf_list_node    *__sf_list_begin_node__;           \
+    assert(__sf_list_begin_l__->size == sizeof(type));              \
     for (__sf_list_begin_node__  = __sf_list_begin_l__->head->next; \
          __sf_list_begin_node__ != __sf_list_begin_l__->head;       \
          __sf_list_begin_node__  = __sf_list_begin_node__->next) {  \
@@ -54,9 +54,9 @@ void sf_list_pop_front(struct sf_list * l, void *o_elt);
 #define SF_LIST_END() } } while(0)
 
 #define SF_LIST_BEGIN_R(l, type, name) do {                             \
-    struct sf_list         *__sf_list_begin_r_l__ = (l);                \
-    struct sf_list_node    *__sf_list_begin_r_node__;                   \
-    assert(sizeof(type) == (l)->size);                                  \
+    const struct sf_list         *__sf_list_begin_r_l__ = (l);          \
+    const struct sf_list_node    *__sf_list_begin_r_node__;             \
+    assert(__sf_list_begin_r_l__->size == sizeof(type));                \
     for(__sf_list_begin_r_node__  = __sf_list_begin_r_l__->head->prev;  \
         __sf_list_begin_r_node__ != __sf_list_begin_r_l__->head;        \
         __sf_list_begin_r_node__  = __sf_list_begin_r_node__->prev) {   \
