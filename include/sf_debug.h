@@ -2,15 +2,11 @@
 #define DEBUG_H
 
 
-#ifndef NDEBUG
-
-#include <stdio.h>
-#define dprintf(format, ...) fprintf(stdout, format, ##__VA_ARGS__)
-
+#ifdef NDEBUG
+# define dprintf(format, ...) ((void) 0)
 #else /* NDEBUG */
-
-#define dprintf(format, ...) (void) ;
-
+# include <stdio.h>
+# define dprintf(format, ...) fprintf(stdout, format, ##__VA_ARGS__)
 #endif /* NDEBUG */
 
 
