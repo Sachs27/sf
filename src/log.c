@@ -7,6 +7,7 @@
 
 #define SF_LOG_BUFSIZ 1024
 
+
 #ifndef NDEBUG
   static sf_log_level_t log_level = SF_LOG_DEBUG;
 #else
@@ -22,6 +23,7 @@ static const char *log_labels[] = {
 };
 
 static sf_log_func *log_func = NULL;
+
 
 sf_result_t sf_log_set_hook(sf_log_func *f) {
     log_func = f;

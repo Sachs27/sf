@@ -3,11 +3,16 @@
 
 
 #include <stddef.h>
+#include <stdint.h>
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /** sf_swap(T, x, y)
  *
- * Swap the content of two variable
+ * Swap the content of two variable.
  */
 #define sf_swap(T, x, y) do {       \
     T __sf_swap_tmp__ = x;          \
@@ -15,10 +20,9 @@
     y = __sf_swap_tmp__;            \
 } while(0)
 
-/** sf_max(x, y)
- */
+/** sf_max(x, y) */
 #ifdef __GNUC__
-#  define sf_max(x, y) ({ \
+#  define sf_max(x, y) ({               \
        typeof(x) __sf_max_x__ = (x);    \
        typeof(y) __sf_max_y__ = (y);    \
        __sf_max_x__ > __sf_max_y__      \
@@ -29,8 +33,7 @@
 #  define sf_max(x, y) ((x) > (y) ? (x) : (y))
 #endif /* __GNUC__ */
 
-/** sf_min(x, y)
- */
+/** sf_min(x, y) */
 #ifdef __GNUC__
 #  define sf_min(x, y) ({ \
        typeof(x) __sf_min_x__ = (x);    \
@@ -43,16 +46,14 @@
 #  define sf_min(x, y) ((x) < (y) ? (x) : (y))
 #endif /* __GNUC__ */
 
-/** sf_offsetof(type, filed)
- */
+/** sf_offsetof(type, filed) */
 #ifdef __GNUC__
 #  define sf_offsetof(type, filed) __buildin_offsetof(type, field)
 #else
 #  define sf_offsetof(type, filed) ((size_t) (&((type *) 0)->filed))
 #endif /* __GNUC__ */
 
-/** sf_container_of(ptr, type, filed)
- */
+/** sf_container_of(ptr, type, filed) */
 #ifdef __GNUC__
 #  define sf_container_of(ptr, type, filed) ({                              \
        const typeof(((type *) 0)->filed) *__sf_container_of_ptr__ = (ptr);  \
@@ -74,5 +75,9 @@ static inline uint32_t sf_power_2(uint32_t n) {
     return n + 1;
 }
 
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* SF_UTILS_H */
