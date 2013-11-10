@@ -9,16 +9,26 @@
 
 /** Generic result type
  *
- * - SF_OK  : success
- * - SF_ERR : generic failure
+ * - SF_OK    : success
+ * - SF_ERR   : generic failure
+ * - SF_NOMEM : out of memory
+ * - SF_INVAL : invalid argument
  */
-typedef int32_t sf_result_t;
-#define SF_ERR -1
-#define SF_OK   0
+enum sf_result {
+    SF_ERR = -1,
+    SF_OK = 0,
+    SF_NOMEM,
+    SF_INVAL,
+};
+typedef enum sf_result sf_result_t;
 
-typedef int32_t sf_bool_t;
-#define SF_TRUE  1
-#define SF_FALSE 0
+
+enum sf_bool {
+    SF_FALSE = 0,
+    SF_TRUE = 1,
+};
+typedef enum sf_bool sf_bool_t;
+
 
 /**
  * Use this to eliminate 'unused parameter' warnings.
