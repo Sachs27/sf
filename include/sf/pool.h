@@ -43,13 +43,13 @@ struct sf_pool {
 
 sf_result_t sf_pool_init(sf_pool_t *pool, size_t max);
 
-sf_result_t sf_pool_destroy(sf_pool_t *pool);
+void sf_pool_destroy(sf_pool_t *pool);
 
 void *sf_pool_alloc(sf_pool_t *pool, size_t size);
 
 void *sf_pool_calloc(sf_pool_t *pool, size_t size);
 
-sf_result_t sf_pool_free(sf_pool_t *pool, void *p);
+void sf_pool_free(sf_pool_t *pool, void *p);
 
 void sf_pool_clear(sf_pool_t *pool);
 

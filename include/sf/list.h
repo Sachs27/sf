@@ -20,10 +20,8 @@ extern "C" {
  * sf_list_t        l;
  * sf_list_def_t    def;
  *
+ * memset(&def, 0, sizeof(def));
  * def.size = sizeof(int);
- * def.cmp  = NULL;
- * def.cpy  = NULL;
- * def.free = NULL;
  *
  * sf_list_init(&l, &def);
  * ```
@@ -38,7 +36,7 @@ extern "C" {
  *
  *     ...
  *
- * } while (sf_list_iter_next(&iter));
+ * } while (sf_list_next(&l, &iter));
  * ```
  */
 
@@ -96,7 +94,7 @@ sf_result_t sf_list_init(sf_list_t *l, const sf_list_def_t *def);
 
 void sf_list_clear(sf_list_t *l);
 
-sf_result_t sf_list_destory(sf_list_t *l);
+void sf_list_destroy(sf_list_t *l);
 
 void *sf_list_push(sf_list_t *l, const void *elt);
 
@@ -106,11 +104,19 @@ sf_result_t sf_list_pop(sf_list_t *l);
 
 sf_result_t sf_list_pop_front(sf_list_t *l);
 
+void *sf_list_head(sf_list_t *l);
+
+void *sf_list_tail(sf_list_t *l);
+
+void *sf_list_nth(sf_list_t *l, uint32_t nth);
+
+uint32_t sf_list_cnt(sf_list_t *l);
+
 
 typedef struct sf_list_iter sf_list_iter_t;
 struct sf_list_iter {
-    sf_list_t      *l;
     sf_list_node_t *cur;
+    int32_t         order;
 };
 
 
@@ -118,28 +124,40 @@ struct sf_list_iter {
  * Get the first iterator of list.
  *
  * Return SF_FALSE if there is no element in the list.
+ *
+ * The order of iteration is their physical order.
  */
 sf_bool_t sf_list_begin(sf_list_t *l, sf_list_iter_t *iter);
+
+/**
+ * The same as `sf_list_begin` except that in the reverse order.
+ */
+sf_bool_t sf_list_begin_r(sf_list_t *l, sf_list_iter_t *iter);
 
 /**
  * Walk to the next element in a list.
  *
  * Return SF_FALSE if there are no more elements to iterate.
  */
-sf_bool_t sf_list_iter_next(sf_list_iter_t *iter);
+sf_bool_t sf_list_next(sf_list_t *l, sf_list_iter_t *iter);
 
 void sf_list_end(sf_list_t *l, sf_list_iter_t *iter);
 
+/**
+ * Insert the specity element to a list.
+ *
+ * The new element will be inserted _behind_ the iter.
+ */
 void *sf_list_insert(sf_list_t *l, sf_list_iter_t *iter, const void *elt);
 
 /**
  * Remove the specity element from a list.
  *
- * The iter will point to the previous element of removed element.
+ * The iter will then point to the _previous_ element of removed element.
  */
 sf_result_t sf_list_remove(sf_list_t *l, sf_list_iter_t *iter);
 
-#define sf_list_iter_elt(iter) ((void *) ((iter)->cur + 1))
+void *sf_list_iter_elt(sf_list_iter_t *iter);
 
 
 #ifdef __cplusplus

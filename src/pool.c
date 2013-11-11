@@ -69,7 +69,7 @@ sf_result_t sf_pool_init(sf_pool_t *pool, size_t max) {
     return SF_OK;
 }
 
-sf_result_t sf_pool_destroy(sf_pool_t *pool) {
+void sf_pool_destroy(sf_pool_t *pool) {
     sf_pool_node_t  *node;
     sf_pool_large_t *large;
 
@@ -120,20 +120,18 @@ void *sf_pool_calloc(sf_pool_t *pool, size_t size) {
     return m;
 }
 
-sf_result_t sf_pool_free(sf_pool_t *pool, void *p) {
+void sf_pool_free(sf_pool_t *pool, void *p) {
     sf_pool_large_t *large;
 
     for (large = pool->large; large; large = large->next) {
         if (large->alloc == p) {
             sf_free(large->alloc);
             large->alloc = NULL;
-            return SF_OK;
+            return;
         }
     }
 
     sf_log(SF_LOG_WARN, "sf_pool_free: %p isn't a large pointer.", p);
-
-    return SF_INVAL;
 }
 
 void sf_pool_clear(sf_pool_t *pool) {
