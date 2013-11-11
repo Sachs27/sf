@@ -11,12 +11,13 @@
 extern "C" {
 #endif
 
+
 enum sf_log_level {
     SF_LOG_PANIC = 0,
     SF_LOG_ERR,
     SF_LOG_WARN,
-    SF_LOG_INFO,
     SF_LOG_DEBUG,
+    SF_LOG_INFO,
     SF_LOG_NLEVELS,
 };
 typedef enum sf_log_level sf_log_level_t;

@@ -6,6 +6,7 @@
 extern "C" {
 #endif
 
+
 /** Generic result type
  *
  * - SF_OK    : success

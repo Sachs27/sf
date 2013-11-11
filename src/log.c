@@ -9,7 +9,7 @@
 
 
 #ifndef NDEBUG
-  static sf_log_level_t log_level = SF_LOG_DEBUG;
+  static sf_log_level_t log_level = SF_LOG_INFO;
 #else
   static sf_log_level_t log_level = SF_LOG_WARN;
 #endif /* NDEBUG */
@@ -18,8 +18,8 @@ static const char *log_labels[] = {
     "PANIC",
     "ERROR",
     "WARNING",
+    "DEBUG",
     "INFO",
-    "DEBUG"
 };
 
 static sf_log_func *log_func = NULL;
@@ -101,4 +101,3 @@ sf_result_t sf_logv(sf_log_level_t level, const char *fmt, va_list ap) {
 
     return SF_OK;
 }
-

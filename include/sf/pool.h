@@ -2,6 +2,7 @@
 #define SF_POOL_H
 
 
+#include <stddef.h>
 #include <stdint.h>
 
 #include "defs.h"
@@ -10,6 +11,9 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+
+#define SF_POOL_PAGESIZ         4095
 
 
 typedef struct sf_pool_large sf_pool_large_t;
@@ -25,19 +29,29 @@ struct sf_pool_node {
     uint8_t        *end;
 
     /*
-     * alloced memory
+     * flexible array for allocated memory
      */
 };
 
 typedef struct sf_pool sf_pool_t;
 struct sf_pool {
-    sf_pool_node_t     *first;
     size_t              max;
+    sf_pool_node_t     *first;
     sf_pool_large_t    *large;
 };
 
 
-sf_result_t sf_pool_init(sf_pool_t *pool);
+sf_result_t sf_pool_init(sf_pool_t *pool, size_t max);
+
+sf_result_t sf_pool_destroy(sf_pool_t *pool);
+
+void *sf_pool_alloc(sf_pool_t *pool, size_t size);
+
+void *sf_pool_calloc(sf_pool_t *pool, size_t size);
+
+sf_result_t sf_pool_free(sf_pool_t *pool, void *p);
+
+void sf_pool_clear(sf_pool_t *pool);
 
 
 #ifdef __cplusplus

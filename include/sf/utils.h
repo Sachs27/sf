@@ -5,10 +5,13 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "defs.h"
+
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
 
 /** sf_swap(T, x, y)
  *
@@ -74,6 +77,12 @@ static inline uint32_t sf_power_2(uint32_t n) {
     n |= (n >> 1);
     return n + 1;
 }
+
+void *sf_alloc(size_t size);
+
+void *sf_calloc(size_t size);
+
+sf_result_t sf_free(void *p);
 
 
 #ifdef __cplusplus
