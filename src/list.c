@@ -82,14 +82,25 @@ void *sf_list_tail(sf_list_t *l) {
 }
 
 void *sf_list_nth(sf_list_t *l, uint32_t nth) {
+    uint32_t        cnt;
     int             n;
     sf_list_iter_t  iter;
 
-    if (n = 0, sf_list_begin(l, &iter)) do {
-        if (n == nth) {
-            return sf_list_iter_elt(&iter);
+    if ((cnt = sf_list_cnt(l)) > 0) {
+        if (nth < cnt / 2) {
+            sf_list_begin(l, &iter);
+        } else {
+            sf_list_begin_r(l, &iter);
+            nth = cnt - 1 - nth;
         }
-    } while (++n, sf_list_next(l, &iter));
+
+        n = 0;
+        do {
+            if (n == nth) {
+                return sf_list_iter_elt(&iter);
+            }
+        } while (++n, sf_list_next(l, &iter));
+    }
 
     sf_log(SF_LOG_ERR, "sf_list_nth: %" PRIu32 " out of range.", nth);
     return NULL;
