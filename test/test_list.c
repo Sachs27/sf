@@ -1,21 +1,27 @@
+#include <assert.h>
 #include <stdio.h>
 #include <string.h>
 
 #include <sf/list.h>
 #include <sf/log.h>
+#include <sf/utils.h>
 
 
 int main(void) {
-    int n;
+    uint32_t n;
+    char ch;
+    sf_list_iter_t  iter;
     sf_list_t       l;
     sf_list_def_t   def;
 
-    memset(&def, 0, sizeof(def));
+    sf_memzero(&def, sizeof(def));
     def.size = sizeof(char);
 
-    sf_list_init(&l, &def);
+    (void) sf_list_init(&l, &def);
 
-    char ch;
+    if (sf_list_begin(&l, &iter) == SF_FALSE) {
+        assert((*(int *) sf_list_iter_elt(&iter)) == 0);
+    }
 
     for (ch = 'a'; ch <= 'z'; ++ch) {
         sf_list_push(&l, &ch);
@@ -29,7 +35,7 @@ int main(void) {
     ch = '!';
     sf_list_push_front(&l, &ch);
 
-    while (sf_list_cnt(&l)) {
+    while (sf_list_cnt(&l) != 0) {
         fprintf(stdout, "pop: %c\n", * (char *) sf_list_tail(&l));
         sf_list_pop(&l);
     }
@@ -38,21 +44,19 @@ int main(void) {
         sf_list_push_front(&l, &ch);
     }
 
-    sf_list_iter_t iter;
-
-    if (n = 0, sf_list_begin(&l, &iter)) do {
+    if (n = 0, sf_list_begin(&l, &iter) == SF_TRUE) do {
         char *pch = sf_list_iter_elt(&iter);
         fprintf(stdout, "%c", *pch);
         if (n == 10) {
             ch = '!';
             sf_list_insert(&l, &iter, &ch);
         }
-    } while (++n, sf_list_next(&l, &iter));
+    } while (++n, sf_list_next(&l, &iter) == SF_TRUE);
 
     fprintf(stdout, "\n");
 
     for (n = 0; n < sf_list_cnt(&l); ++n) {
-        fprintf(stdout, "%dth: %c\n", n, *(char *) sf_list_nth(&l, n));
+        fprintf(stdout, "%uth: %c\n", n, *(char *) sf_list_nth(&l, n));
     }
 
     sf_list_clear(&l);
@@ -61,13 +65,13 @@ int main(void) {
         sf_list_push_front(&l, &ch);
     }
 
-    if (n = 0, sf_list_begin_r(&l, &iter)) do {
+    if (n = 0, sf_list_rbegin(&l, &iter) == SF_TRUE) do {
         char *pch = sf_list_iter_elt(&iter);
         fprintf(stdout, "%c", *pch);
         if (n == 10) {
             break;
         }
-    } while (++n, sf_list_next(&l, &iter));
+    } while (++n, sf_list_next(&l, &iter) == SF_TRUE);
 
     fprintf(stdout, "\n");
     fprintf(stdout, "cur[10]: %c\n", *(char *) sf_list_iter_elt(&iter));
@@ -83,7 +87,7 @@ int main(void) {
     do {
         char *pch = sf_list_iter_elt(&iter);
         fprintf(stdout, "%c", *pch);
-    } while (sf_list_next(&l, &iter));
+    } while (sf_list_next(&l, &iter) == SF_TRUE);
     fprintf(stdout, "\n");
 
     sf_list_destroy(&l);

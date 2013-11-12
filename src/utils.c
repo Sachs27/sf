@@ -1,4 +1,3 @@
-#include <stdlib.h>
 #include <string.h>
 
 #include "sf/log.h"
@@ -26,10 +25,4 @@ void *sf_calloc(size_t size) {
     memset(p, 0, size);
 
     return p;
-}
-
-sf_result_t sf_free(void *p) {
-    free(p);
-
-    return SF_OK;
 }

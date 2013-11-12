@@ -10,10 +10,19 @@ extern "C" {
 #endif
 
 
+#define SF_ARRAY_DEF_NALLOC 4
+
 typedef struct sf_array_def sf_array_def_t;
 struct sf_array_def {
+    /*
+     * Hint for the initial element count to allocated,
+     *
+     * If zero, SF_ARRAY_DEF_NALLOC is used.
+     */
+    uint32_t    nalloc;
+
     /* size of an element in byte */
-    size_t  size;
+    size_t      size;
 
     /*
      * Function to compare to elements.
@@ -51,6 +60,20 @@ struct sf_array {
     uint32_t        nalloc;
     sf_array_def_t  def;
 };
+
+sf_result_t sf_array_init(sf_array_t *a, sf_array_def_t *def);
+
+void sf_array_clear(sf_array_t *a);
+
+void sf_array_destroy(sf_array_t *a);
+
+void sf_array_push(sf_array_t *a, const void *elt);
+
+void sf_array_push_front(sf_array_t *a, const void *elt);
+
+void sf_array_pop(sf_array_t *a);
+
+void sf_array_pop_front(sf_array_t *a);
 
 
 #ifdef __cplusplus

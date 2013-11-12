@@ -4,6 +4,8 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <string.h>
+#include <stdlib.h>
 
 #include "defs.h"
 
@@ -19,10 +21,10 @@ extern "C" {
     (uint8_t *) (((uintptr_t) (p) + ((uintptr_t) a - 1))    \
                  & ~((uintptr_t) a - 1))
 
-/** sf_swap(T, x, y)
- *
- * Swap the content of two variable.
- */
+
+#define sf_memzero(p, size) (void) memset(p, 0, size)
+
+/** sf_swap(T, x, y) */
 #define sf_swap(T, x, y) do {       \
     T __sf_swap_tmp__ = x;          \
     x = y;                          \
@@ -88,7 +90,7 @@ void *sf_alloc(size_t size);
 
 void *sf_calloc(size_t size);
 
-sf_result_t sf_free(void *p);
+#define sf_free(p) free(p)
 
 
 #ifdef __cplusplus
