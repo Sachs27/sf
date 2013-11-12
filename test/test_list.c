@@ -2,6 +2,7 @@
 #include <string.h>
 
 #include <sf/list.h>
+#include <sf/log.h>
 
 
 int main(void) {
@@ -18,6 +19,23 @@ int main(void) {
 
     for (ch = 'a'; ch <= 'z'; ++ch) {
         sf_list_push(&l, &ch);
+    }
+
+    while (sf_list_cnt(&l) > 10) {
+        fprintf(stdout, "pop: %c\n", * (char *) sf_list_tail(&l));
+        sf_list_pop(&l);
+    }
+
+    ch = '!';
+    sf_list_push_front(&l, &ch);
+
+    while (sf_list_cnt(&l)) {
+        fprintf(stdout, "pop: %c\n", * (char *) sf_list_tail(&l));
+        sf_list_pop(&l);
+    }
+
+    for (ch = 'a'; ch <= 'z'; ++ch) {
+        sf_list_push_front(&l, &ch);
     }
 
     sf_list_iter_t iter;

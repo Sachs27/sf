@@ -5,17 +5,12 @@
 #include "sf/log.h"
 
 
-#define SF_ALIGNMENT sizeof(unsigned long)      /* platform word */
-
-#define SF_ALIGN_PTR(p, a)                                  \
-    (uint8_t *) (((uintptr_t) (p) + ((uintptr_t) a - 1))    \
-                 & ~((uintptr_t) a - 1))
-
-
 inline static void sf_pool_node_init(sf_pool_node_t *node, size_t size) {
     node->next = NULL;
     node->last = (uint8_t *) (node + 1);
     node->end  = node->last + size;
+
+    node->last = SF_ALIGN_PTR(node->last, SF_ALIGNMENT);
 }
 
 static void *sf_pool_alloc_large(sf_pool_t *pool, size_t size) {
@@ -47,8 +42,9 @@ static void *sf_pool_alloc_node(sf_pool_t *pool, size_t size) {
     node = sf_alloc((nsize = sizeof(*node) + pool->max));
     sf_pool_node_init(node, nsize);
 
-    m = SF_ALIGN_PTR(node->last, SF_ALIGNMENT);
+    m = node->last;
     node->last = m + size;
+    node->last = SF_ALIGN_PTR(node->last, SF_ALIGNMENT);
 
     node->next = pool->first;
     pool->first = node;
@@ -98,10 +94,12 @@ void *sf_pool_alloc(sf_pool_t *pool, size_t size) {
 
     node = pool->first;
     do {
-        m = SF_ALIGN_PTR(node->last, SF_ALIGNMENT);
+        /* node->last alwasy point to an aligned address.*/
+        m = node->last;
 
         if ((size_t) (node->end - m) >= size) {
             node->last = m + size;
+            node->last = SF_ALIGN_PTR(node->last, SF_ALIGNMENT);
             return m;
         }
 
@@ -148,5 +146,6 @@ void sf_pool_clear(sf_pool_t *pool) {
 
     for (node = pool->first; node; node = node->next) {
         node->last = (uint8_t *) (node + 1);
+        node->last = SF_ALIGN_PTR(node->last, SF_ALIGNMENT);
     }
 }

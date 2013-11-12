@@ -3,6 +3,7 @@
 
 #include "sf/log.h"
 #include "sf/list.h"
+#include "sf/utils.h"
 
 
 sf_result_t sf_list_init(sf_list_t *l, const sf_list_def_t *def) {
@@ -73,14 +74,6 @@ sf_result_t sf_list_pop_front(sf_list_t *l) {
     return sf_list_remove(l, &iter);
 }
 
-void *sf_list_head(sf_list_t *l) {
-    return l->head.next + 1;
-}
-
-void *sf_list_tail(sf_list_t *l) {
-    return l->head.prev + 1;
-}
-
 void *sf_list_nth(sf_list_t *l, uint32_t nth) {
     uint32_t        cnt;
     int             n;
@@ -106,11 +99,6 @@ void *sf_list_nth(sf_list_t *l, uint32_t nth) {
     return NULL;
 }
 
-uint32_t sf_list_cnt(sf_list_t *l) {
-    return l->nelts;
-}
-
-
 sf_bool_t sf_list_begin(sf_list_t *l, sf_list_iter_t *iter) {
     iter->order = 1;
     iter->cur = l->head.next;
@@ -134,6 +122,7 @@ sf_bool_t sf_list_next(sf_list_t *l, sf_list_iter_t *iter) {
 
 void sf_list_end(sf_list_t *l, sf_list_iter_t *iter) {
     iter->cur = &l->head;
+    iter->order = 1;
 }
 
 void *sf_list_insert(sf_list_t *l, sf_list_iter_t *iter, const void *elt) {
@@ -165,6 +154,7 @@ void *sf_list_insert(sf_list_t *l, sf_list_iter_t *iter, const void *elt) {
 sf_result_t sf_list_remove(sf_list_t *l, sf_list_iter_t *iter) {
     sf_list_node_t *prev = iter->cur->prev;
     sf_list_node_t *next = iter->cur->next;
+    sf_pool_node_t *node;
 
     if (iter->cur == &l->head) {
         return SF_INVAL;
@@ -174,16 +164,18 @@ sf_result_t sf_list_remove(sf_list_t *l, sf_list_iter_t *iter) {
         l->def.free(sf_list_iter_elt(iter));
     }
 
-#if 0
-    sf_pool_node_t *node;
     for (node = l->pool.first; node; node = node->next) {
-        if (node->last == (uint8_t *) sf_list_iter_elt(iter) + l->def.size) {
-            node->last -= sizeof(sf_list_node_t) + l->def.size;
-            sf_log(SF_LOG_DEBUG, "sf_list_remove: clean pool.");
+        uint8_t *last;
+
+        last = (uint8_t *) sf_list_iter_elt(iter) + l->def.size;
+        last = SF_ALIGN_PTR(last, SF_ALIGNMENT);
+        if (node->last == last) {
+            node->last -= (last - (uint8_t *) iter->cur);
+            sf_log(SF_LOG_DEBUG, "sf_list_remove: clean pool for %zu bytes.",
+                   last - (uint8_t *) iter->cur);
             break;
         }
     }
-#endif
 
     prev->next = next;
     next->prev = prev;
@@ -197,8 +189,4 @@ sf_result_t sf_list_remove(sf_list_t *l, sf_list_iter_t *iter) {
     --l->nelts;
 
     return SF_OK;
-}
-
-void *sf_list_iter_elt(sf_list_iter_t *iter) {
-    return iter->cur + 1;
 }

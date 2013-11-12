@@ -1,4 +1,3 @@
-#include <time.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -57,8 +56,6 @@ sf_result_t sf_log(sf_log_level_t level, const char *fmt, ...) {
 }
 
 sf_result_t sf_logv(sf_log_level_t level, const char *fmt, va_list ap) {
-    time_t      rawtime;
-    struct tm  *timeinfo;
     char        buf[SF_LOG_BUFSIZ];
     char       *ptr;
     size_t      len;
@@ -67,15 +64,7 @@ sf_result_t sf_logv(sf_log_level_t level, const char *fmt, va_list ap) {
         return SF_OK;
     }
 
-    time(&rawtime);
-    timeinfo = localtime(&rawtime);
-    if (strftime(buf, SF_LOG_BUFSIZ, "%Y-%m-%d %H:%M:%S ", timeinfo) == 0) {
-        return SF_ERR;
-    }
-
-    len = strlen(buf);
-    ptr = buf + len;
-    if (snprintf(ptr, SF_LOG_BUFSIZ - len, "%s ", log_labels[level]) < 0) {
+    if (snprintf(buf, SF_LOG_BUFSIZ, "[%s] ", log_labels[level]) < 0) {
         return SF_ERR;
     }
 
@@ -97,7 +86,11 @@ sf_result_t sf_logv(sf_log_level_t level, const char *fmt, va_list ap) {
         }
     }
 
-    fprintf(stderr, "%s", buf);
+    if (level <= SF_LOG_WARN) {
+        fprintf(stderr, "%s", buf);
+    } else {
+        fprintf(stdout, "%s", buf);
+    }
 
     return SF_OK;
 }

@@ -4,12 +4,12 @@
 
 
 sf_bool_t on_logging_true(sf_log_level_t level, const char *str) {
-    fprintf(stderr, "on_logging_true: %s", str);
+    fprintf(stdout, "on_logging_true: %s", str);
     return SF_TRUE;
 }
 
 sf_bool_t on_logging_false(sf_log_level_t level, const char *str) {
-    fprintf(stderr, "on_logging_false: %s", str);
+    fprintf(stdout, "on_logging_false: %s", str);
     return SF_FALSE;
 }
 

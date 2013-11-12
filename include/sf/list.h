@@ -104,13 +104,32 @@ sf_result_t sf_list_pop(sf_list_t *l);
 
 sf_result_t sf_list_pop_front(sf_list_t *l);
 
-void *sf_list_head(sf_list_t *l);
-
-void *sf_list_tail(sf_list_t *l);
-
 void *sf_list_nth(sf_list_t *l, uint32_t nth);
 
-uint32_t sf_list_cnt(sf_list_t *l);
+
+#ifdef __GNUC__
+
+static inline void *sf_list_head(sf_list_t *l) {
+    return l->head.next + 1;
+}
+
+static inline void *sf_list_tail(sf_list_t *l) {
+    return l->head.prev + 1;
+}
+
+static inline uint32_t sf_list_cnt(sf_list_t *l) {
+    return l->nelts;
+}
+
+#else
+
+#  define sf_list_head(l) ((void *) ((l)->head.next + 1))
+
+#  define sf_list_tail(l) ((void *) ((l)->head.prev + 1))
+
+#  define sf_list_cnt(l) ((l)->nelts)
+
+#endif /* __GNUC__ */
 
 
 typedef struct sf_list_iter sf_list_iter_t;
@@ -157,7 +176,18 @@ void *sf_list_insert(sf_list_t *l, sf_list_iter_t *iter, const void *elt);
  */
 sf_result_t sf_list_remove(sf_list_t *l, sf_list_iter_t *iter);
 
-void *sf_list_iter_elt(sf_list_iter_t *iter);
+
+#ifdef __GNUC__
+
+static inline void *sf_list_iter_elt(sf_list_iter_t *iter) {
+    return iter->cur + 1;
+}
+
+#else
+
+#  define sf_list_iter_elt(iter) ((void *) (iter)->cur + 1)
+
+#endif /* __GNUC__ */
 
 
 #ifdef __cplusplus

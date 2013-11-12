@@ -13,6 +13,12 @@ extern "C" {
 #endif
 
 
+#define SF_ALIGNMENT sizeof(unsigned long)      /* platform word */
+
+#define SF_ALIGN_PTR(p, a)                                  \
+    (uint8_t *) (((uintptr_t) (p) + ((uintptr_t) a - 1))    \
+                 & ~((uintptr_t) a - 1))
+
 /** sf_swap(T, x, y)
  *
  * Swap the content of two variable.

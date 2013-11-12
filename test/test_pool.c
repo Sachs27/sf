@@ -9,10 +9,8 @@ int main(void) {
 
     sf_pool_init(&p, 0);
 
-    printf("%p\n", sf_pool_alloc(&p, 100));
-
-    printf("%p\n", sf_pool_alloc(&p, 100));
-    printf("%p\n", sf_pool_alloc(&p, 100));
+    printf("%p\n", sf_pool_alloc(&p, 1));
+    printf("%p\n", sf_pool_alloc(&p, 1));
     printf("%p\n", sf_pool_alloc(&p, 100));
     printf("%p\n", sf_pool_alloc(&p, 100));
     printf("%p\n", sf_pool_alloc(&p, 100));
