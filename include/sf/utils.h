@@ -57,9 +57,9 @@ extern "C" {
 
 /** sf_offsetof(type, filed) */
 #ifdef __GNUC__
-#  define sf_offsetof(type, filed) __builtin_offsetof(type, field)
+#  define sf_offsetof(type, field) __builtin_offsetof(type, field)
 #else
-#  define sf_offsetof(type, filed) ((size_t) (&((type *) 0)->filed))
+#  define sf_offsetof(type, field) ((size_t) (&((type *) 0)->field))
 #endif /* __GNUC__ */
 
 /** sf_container_of(ptr, type, filed) */
