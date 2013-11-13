@@ -41,7 +41,7 @@ void sf_array_clear(sf_array_t *a) {
 
         if (sf_array_begin(a, &iter)) do {
             a->def.free(sf_array_iter_elt(&iter));
-        } while (sf_array_next(a, &iter));
+        } while (sf_array_iter_next(&iter));
     }
 
     a->nelts = 0;
@@ -138,25 +138,6 @@ sf_bool_t sf_array_rbegin(sf_array_t *a, sf_array_iter_t *iter) {
     return SF_TRUE;
 }
 
-sf_bool_t sf_array_next(sf_array_t *a, sf_array_iter_t *iter) {
-    if (iter->a != a) {
-        sf_log(SF_LOG_ERR, "sf_array_next: Invalid iterator.");
-        return SF_FALSE;
-    }
-
-    if (iter->order > 0) {
-        if (++iter->idx >= sf_array_cnt(a)) {
-            return SF_FALSE;
-        }
-    } else {
-        if (iter->idx-- == 0 || iter->idx >= sf_array_cnt(a)) {
-            return SF_FALSE;
-        }
-    }
-
-    return SF_TRUE;
-}
-
 void sf_array_end(sf_array_t *a, sf_array_iter_t *iter) {
     iter->a     = a;
     iter->order = 1;
@@ -224,4 +205,18 @@ void sf_array_remove(sf_array_t *a, sf_array_iter_t *iter) {
     if (iter->order > 0 && iter->idx > 0) {
         --iter->idx;
     }
+}
+
+sf_bool_t sf_array_iter_next(sf_array_iter_t *iter) {
+    if (iter->order > 0) {
+        if (++iter->idx >= sf_array_cnt(iter->a)) {
+            return SF_FALSE;
+        }
+    } else {
+        if (iter->idx-- == 0 || iter->idx >= sf_array_cnt(iter->a)) {
+            return SF_FALSE;
+        }
+    }
+
+    return SF_TRUE;
 }

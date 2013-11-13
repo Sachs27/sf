@@ -32,11 +32,11 @@ extern "C" {
  * sf_list_iter_t iter;
  *
  * if (sf_list_begin(&l, &iter)) do {
- *     int *elt = sf_list_iter_elt(&iter);
+ *     int elt = *(int *) sf_list_iter_elt(&iter);
  *
  *     ...
  *
- * } while (sf_list_next(&l, &iter));
+ * } while (sf_list_iter_next(&iter));
  * ```
  */
 
@@ -115,6 +115,7 @@ void *sf_list_nth(sf_list_t *l, uint32_t nth);
 
 typedef struct sf_list_iter sf_list_iter_t;
 struct sf_list_iter {
+    sf_list_t      *l;
     sf_list_node_t *cur;
     int32_t         order;
 };
@@ -134,13 +135,6 @@ sf_bool_t sf_list_begin(sf_list_t *l, sf_list_iter_t *iter);
  */
 sf_bool_t sf_list_rbegin(sf_list_t *l, sf_list_iter_t *iter);
 
-/**
- * Walk to the 'next' element in a list.
- *
- * Return SF_FALSE if there are no more elements to iterate.
- */
-sf_bool_t sf_list_next(sf_list_t *l, sf_list_iter_t *iter);
-
 void sf_list_end(sf_list_t *l, sf_list_iter_t *iter);
 
 /**
@@ -156,6 +150,13 @@ void sf_list_insert(sf_list_t *l, sf_list_iter_t *iter, const void *elt);
  * The iter will then point to the _previous_ element of removed element.
  */
 void sf_list_remove(sf_list_t *l, sf_list_iter_t *iter);
+
+/**
+ * Walk to the 'next' element in a list.
+ *
+ * Return SF_FALSE if there are no more elements to iterate.
+ */
+sf_bool_t sf_list_iter_next(sf_list_iter_t *iter);
 
 /**
  * Get a pointer which point to the iterator's element.

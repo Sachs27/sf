@@ -47,7 +47,7 @@ int main(void) {
             ch = '!';
             sf_array_insert(&l, &iter, &ch);
         }
-    } while (++n, sf_array_next(&l, &iter) == SF_TRUE);
+    } while (++n, sf_array_iter_next(&iter) == SF_TRUE);
 
     fprintf(stdout, "\n");
 
@@ -67,7 +67,7 @@ int main(void) {
         if (n == 10) {
             break;
         }
-    } while (++n, sf_array_next(&l, &iter) == SF_TRUE);
+    } while (++n, sf_array_iter_next(&iter) == SF_TRUE);
 
     fprintf(stdout, "\n");
     fprintf(stdout, "cur[10]: %c\n", *(char *) sf_array_iter_elt(&iter));
@@ -83,7 +83,7 @@ int main(void) {
     do {
         char *pch = sf_array_iter_elt(&iter);
         fprintf(stdout, "%c", *pch);
-    } while (sf_array_next(&l, &iter) == SF_TRUE);
+    } while (sf_array_iter_next(&iter) == SF_TRUE);
     fprintf(stdout, "\n");
 
 
@@ -93,7 +93,7 @@ int main(void) {
         if (n == 10) {
             break;
         }
-    } while (++n, sf_array_next(&l, &iter) == SF_TRUE);
+    } while (++n, sf_array_iter_next(&iter) == SF_TRUE);
 
     fprintf(stdout, "\n");
     fprintf(stdout, "cur[10]: %c\n", *(char *) sf_array_iter_elt(&iter));
@@ -109,13 +109,13 @@ int main(void) {
     do {
         char *pch = sf_array_iter_elt(&iter);
         fprintf(stdout, "%c", *pch);
-    } while (sf_array_next(&l, &iter) == SF_TRUE);
+    } while (sf_array_iter_next(&iter) == SF_TRUE);
     fprintf(stdout, "\n");
 
     if (sf_array_begin(&l, &iter)) do {
         char *pch = sf_array_iter_elt(&iter);
         fprintf(stdout, "%c", *pch);
-    } while (sf_array_next(&l, &iter));
+    } while (sf_array_iter_next(&iter));
     fprintf(stdout, "\n");
 
     sf_array_destroy(&l);

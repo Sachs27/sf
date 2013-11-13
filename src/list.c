@@ -24,7 +24,7 @@ void sf_list_clear(sf_list_t *l) {
     if (l->def.free) {
         if (sf_list_begin(l, &iter)) do {
             l->def.free(sf_list_iter_elt(&iter));
-        } while (sf_list_next(l, &iter));
+        } while (sf_list_iter_next(&iter));
     }
 
     l->head.prev = l->head.next = &l->head;
@@ -39,7 +39,7 @@ void sf_list_destroy(sf_list_t *l) {
     if (l->def.free) {
         if (sf_list_begin(l, &iter)) do {
             l->def.free(sf_list_iter_elt(&iter));
-        } while (sf_list_next(l, &iter));
+        } while (sf_list_iter_next(&iter));
     }
 
     return sf_pool_destroy(&l->pool);
@@ -96,7 +96,7 @@ void *sf_list_nth(sf_list_t *l, uint32_t nth) {
             if (n == nth) {
                 return sf_list_iter_elt(&iter);
             }
-        } while (++n, sf_list_next(l, &iter));
+        } while (++n, sf_list_iter_next(&iter));
     }
 
     sf_log(SF_LOG_ERR, "sf_list_nth: %" PRIu32 " out of range.", nth);
@@ -104,8 +104,9 @@ void *sf_list_nth(sf_list_t *l, uint32_t nth) {
 }
 
 sf_bool_t sf_list_begin(sf_list_t *l, sf_list_iter_t *iter) {
+    iter->l     = l;
     iter->order = 1;
-    iter->cur = l->head.next;
+    iter->cur   = l->head.next;
     /*
      * If iter->cur is point to l->head,
      * then `sf_list_iter_elt(iter)` will be zero because the next entry
@@ -116,23 +117,16 @@ sf_bool_t sf_list_begin(sf_list_t *l, sf_list_iter_t *iter) {
 }
 
 sf_bool_t sf_list_rbegin(sf_list_t *l, sf_list_iter_t *iter) {
+    iter->l     = l;
     iter->order = -1;
-    iter->cur = l->head.prev;
-    return iter->cur != &l->head;
-}
-
-sf_bool_t sf_list_next(sf_list_t *l, sf_list_iter_t *iter) {
-    if (iter->order > 0) {
-        iter->cur = iter->cur->next;
-    } else {
-        iter->cur = iter->cur->prev;
-    }
+    iter->cur   = l->head.prev;
     return iter->cur != &l->head;
 }
 
 void sf_list_end(sf_list_t *l, sf_list_iter_t *iter) {
+    iter->l     = l;
     iter->order = 1;
-    iter->cur = &l->head;
+    iter->cur   = &l->head;
 }
 
 void sf_list_insert(sf_list_t *l, sf_list_iter_t *iter, const void *elt) {
@@ -140,6 +134,11 @@ void sf_list_insert(sf_list_t *l, sf_list_iter_t *iter, const void *elt) {
     sf_list_node_t *next = iter->cur;
     sf_list_node_t *node;
     void           *dst;
+
+    if (iter->l != l) {
+        sf_log(SF_LOG_ERR, "sf_list_insert: Invalid iterator.");
+        return;
+    }
 
     node = sf_pool_alloc(&l->pool, sizeof(*node) + l->def.size);
 
@@ -163,6 +162,11 @@ void sf_list_remove(sf_list_t *l, sf_list_iter_t *iter) {
     sf_list_node_t *prev = iter->cur->prev;
     sf_list_node_t *next = iter->cur->next;
     sf_pool_node_t *node;
+
+    if (iter->l != l) {
+        sf_log(SF_LOG_ERR, "sf_list_insert: Invalid iterator.");
+        return;
+    }
 
     if (sf_list_cnt(l) == 0) {
         sf_log(SF_LOG_ERR, "sf_list_remove: empty list.");
@@ -196,4 +200,13 @@ void sf_list_remove(sf_list_t *l, sf_list_iter_t *iter) {
     } else {
         iter->cur = next;
     }
+}
+
+sf_bool_t sf_list_iter_next(sf_list_iter_t *iter) {
+    if (iter->order > 0) {
+        iter->cur = iter->cur->next;
+    } else {
+        iter->cur = iter->cur->prev;
+    }
+    return iter->cur != &iter->l->head;
 }

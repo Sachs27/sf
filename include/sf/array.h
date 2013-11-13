@@ -109,13 +109,6 @@ sf_bool_t sf_array_begin(sf_array_t *a, sf_array_iter_t *iter);
  */
 sf_bool_t sf_array_rbegin(sf_array_t *a, sf_array_iter_t *iter);
 
-/**
- * Walk to the 'next' element in an array.
- *
- * Return SF_FALSE if there are no more elements to iterate.
- */
-sf_bool_t sf_array_next(sf_array_t *a, sf_array_iter_t *iter);
-
 void sf_array_end(sf_array_t *a, sf_array_iter_t *iter);
 
 /**
@@ -131,6 +124,13 @@ void sf_array_insert(sf_array_t *a, sf_array_iter_t *iter, const void *elt);
  * The iter will then point to the _previous_ element of removed element.
  */
 void sf_array_remove(sf_array_t *a, sf_array_iter_t *iter);
+
+/**
+ * Walk to the 'next' element in an array.
+ *
+ * Return SF_FALSE if there are no more elements to iterate.
+ */
+sf_bool_t sf_array_iter_next(sf_array_iter_t *iter);
 
 #define sf_array_iter_elt(iter) sf_array_nth((iter)->a, (iter)->idx)
 
