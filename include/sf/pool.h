@@ -13,9 +13,6 @@ extern "C" {
 #endif
 
 
-#define SF_POOL_PAGESIZ         4095
-
-
 typedef struct sf_pool_large sf_pool_large_t;
 struct sf_pool_large {
     sf_pool_large_t *next;

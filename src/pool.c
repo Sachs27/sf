@@ -5,6 +5,9 @@
 #include "sf/log.h"
 
 
+#define SF_POOL_PAGESIZ SF_PAGESIZ
+
+
 inline static void sf_pool_node_init(sf_pool_node_t *node, size_t size) {
     node->next = NULL;
     node->last = (uint8_t *) (node + 1);

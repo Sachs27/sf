@@ -7,9 +7,14 @@
 
 
 sf_result_t sf_list_init(sf_list_t *l, const sf_list_def_t *def) {
+    if (l == NULL || def == NULL || def->size == 0) {
+        return SF_INVAL;
+    }
+
+    l->def = *def;
     l->head.prev = l->head.next = &l->head;
     l->nelts = 0;
-    memcpy(&l->def, def, sizeof(l->def));
+
     return sf_pool_init(&l->pool, 0);
 }
 
@@ -126,8 +131,8 @@ sf_bool_t sf_list_next(sf_list_t *l, sf_list_iter_t *iter) {
 }
 
 void sf_list_end(sf_list_t *l, sf_list_iter_t *iter) {
-    iter->cur = &l->head;
     iter->order = 1;
+    iter->cur = &l->head;
 }
 
 void sf_list_insert(sf_list_t *l, sf_list_iter_t *iter, const void *elt) {
@@ -160,11 +165,13 @@ void sf_list_remove(sf_list_t *l, sf_list_iter_t *iter) {
     sf_pool_node_t *node;
 
     if (sf_list_cnt(l) == 0) {
+        sf_log(SF_LOG_ERR, "sf_list_remove: empty list.");
         return;
     }
 
     if (l->def.free) {
-        l->def.free(sf_list_iter_elt(iter)); }
+        l->def.free(sf_list_iter_elt(iter));
+    }
 
     for (node = l->pool.first; node; node = node->next) {
         uint8_t *last;
@@ -182,11 +189,11 @@ void sf_list_remove(sf_list_t *l, sf_list_iter_t *iter) {
     prev->next = next;
     next->prev = prev;
 
+    --l->nelts;
+
     if (iter->order > 0) {
         iter->cur = prev;
     } else {
         iter->cur = next;
     }
-
-    --l->nelts;
 }

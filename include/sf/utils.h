@@ -15,8 +15,6 @@ extern "C" {
 #endif
 
 
-#define SF_ALIGNMENT sizeof(unsigned long)      /* platform word */
-
 #define SF_ALIGN_PTR(p, a)                                  \
     (uint8_t *) (((uintptr_t) (p) + ((uintptr_t) a - 1))    \
                  & ~((uintptr_t) a - 1))
@@ -77,18 +75,13 @@ extern "C" {
 #endif /* __GNUC__ */
 
 /** Round up to next power of 2 */
-static inline uint32_t sf_power_2(uint32_t n) {
-    n |= (n >> 16);
-    n |= (n >> 8);
-    n |= (n >> 4);
-    n |= (n >> 2);
-    n |= (n >> 1);
-    return n + 1;
-}
+uint32_t sf_power_2(uint32_t n);
 
 void *sf_alloc(size_t size);
 
 void *sf_calloc(size_t size);
+
+void *sf_realloc(void *p, size_t size);
 
 #define sf_free(p) free(p)
 

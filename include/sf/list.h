@@ -130,7 +130,7 @@ struct sf_list_iter {
 sf_bool_t sf_list_begin(sf_list_t *l, sf_list_iter_t *iter);
 
 /**
- * Get the last iterator of list iterate backwards.
+ * Get the last iterator of list and iterate backwards.
  */
 sf_bool_t sf_list_rbegin(sf_list_t *l, sf_list_iter_t *iter);
 
@@ -157,6 +157,9 @@ void sf_list_insert(sf_list_t *l, sf_list_iter_t *iter, const void *elt);
  */
 void sf_list_remove(sf_list_t *l, sf_list_iter_t *iter);
 
+/**
+ * Get a pointer which point to the iterator's element.
+ */
 #define sf_list_iter_elt(iter) ((void *) ((iter)->cur + 1))
 
 

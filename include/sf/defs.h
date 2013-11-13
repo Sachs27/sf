@@ -2,6 +2,10 @@
 #define SF_DEFS_H
 
 
+#include <stddef.h>
+#include <stdint.h>
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -32,6 +36,11 @@ typedef enum sf_bool sf_bool_t;
  * Use this to eliminate 'unused parameter' warnings.
  */
 #define sf_unused_param(x) (void) x
+
+
+#define SF_ALIGNMENT    sizeof(unsigned long)   /* platform word */
+
+#define SF_PAGESIZ      4096                    /* 4K */
 
 
 #ifdef __cplusplus
