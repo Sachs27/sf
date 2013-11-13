@@ -1,1 +1,1 @@
-* libsf - Simple & Fast library for C programming
+* libsf - Simple & Fast library for C
