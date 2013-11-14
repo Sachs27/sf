@@ -20,6 +20,8 @@ static void *sf_pool_alloc_large(sf_pool_t *pool, size_t size) {
     void            *m;
     sf_pool_large_t *large;
 
+    sf_log(SF_LOG_INFO, "sf_pool_alloc: %zu too large.", size);
+
     m = sf_alloc(size);
 
     for (large = pool->large; large; large = large->next) {
@@ -41,6 +43,8 @@ static void *sf_pool_alloc_node(sf_pool_t *pool, size_t size) {
     uint8_t         *m;
     size_t           nsize;
     sf_pool_node_t  *node;
+
+    sf_log(SF_LOG_INFO, "sf_pool_alloc: create a new pool node.");
 
     node = sf_alloc((nsize = sizeof(*node) + pool->max));
     sf_pool_node_init(node, nsize);

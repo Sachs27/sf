@@ -61,7 +61,7 @@ void sf_array_grow(sf_array_t *a, uint32_t nalloc) {
         return;
     }
 
-    a->elts = sf_realloc(a->elts, nalloc);
+    a->elts = sf_realloc(a->elts, nalloc * a->def.size);
 
     sf_log(SF_LOG_INFO, "sf_array_grow: %" PRIu32 " --> %" PRIu32 ".",
            a->def.nalloc, nalloc);

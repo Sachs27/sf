@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <sf/pool.h>
+#include <sf/utils.h>
 
 
 int main(void) {
@@ -50,6 +51,8 @@ int main(void) {
     sf_pool_alloc(&p, 2000);
 
     sf_pool_destroy(&p);
+
+    sf_memcheck();
 
     return 0;
 }

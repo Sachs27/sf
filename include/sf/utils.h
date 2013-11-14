@@ -5,7 +5,6 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
-#include <stdlib.h>
 
 #include "defs.h"
 
@@ -19,8 +18,6 @@ extern "C" {
     (uint8_t *) (((uintptr_t) (p) + ((uintptr_t) a - 1))    \
                  & ~((uintptr_t) a - 1))
 
-
-#define sf_memzero(p, size) (void) memset(p, 0, size)
 
 /** sf_swap(T, x, y) */
 #define sf_swap(T, x, y) do {       \
@@ -77,13 +74,17 @@ extern "C" {
 /** Round up to next power of 2 */
 uint32_t sf_power_2(uint32_t n);
 
+#define sf_memzero(p, size) (void) memset(p, 0, size)
+
 void *sf_alloc(size_t size);
 
 void *sf_calloc(size_t size);
 
 void *sf_realloc(void *p, size_t size);
 
-#define sf_free(p) free(p)
+void sf_free(void *p);
+
+sf_bool_t sf_memcheck(void);
 
 
 #ifdef __cplusplus

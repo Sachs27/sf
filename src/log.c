@@ -75,7 +75,7 @@ sf_result_t sf_logv(sf_log_level_t level, const char *fmt, va_list ap) {
     }
 
     len = strlen(buf);
-    if (buf[len] != '\n') {
+    if (buf[len - 1] != '\n') {
         ptr = buf + len;
         snprintf(ptr, SF_LOG_BUFSIZ - len, "\n");
     }

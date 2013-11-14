@@ -92,5 +92,7 @@ int main(void) {
 
     sf_list_destroy(&l);
 
+    sf_memcheck();
+
     return 0;
 }
