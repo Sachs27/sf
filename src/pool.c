@@ -89,6 +89,8 @@ void sf_pool_destroy(sf_pool_t *pool) {
         node = node->next;
         sf_free(tmp);
     }
+
+    sf_memzero(pool, sizeof(*pool));
 }
 
 void *sf_pool_alloc(sf_pool_t *pool, size_t size) {

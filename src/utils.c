@@ -16,6 +16,8 @@ uint32_t sf_power_2(uint32_t n) {
 }
 
 static size_t nalloc = 0;
+static size_t nfree  = 0;
+static size_t nbytes = 0;
 
 void *sf_alloc(size_t size) {
     void *p;
@@ -26,7 +28,8 @@ void *sf_alloc(size_t size) {
         abort();
     }
 
-    nalloc += size;
+    ++nalloc;
+    nbytes += size;
     *(size_t *) p = size;
 
     sf_log(SF_LOG_INFO, "sf_alloc: allocate %zu bytes.", size);
@@ -47,14 +50,14 @@ void *sf_realloc(void *p, size_t size) {
     size_t *real = (size_t *) p - 1;
     void   *newp;
 
-    nalloc -= *real;
+    nbytes -= *real;
     newp = realloc(real, size);
     if (newp == NULL) {
         sf_log(SF_LOG_PANIC, "sf_realloc: failed to allocate %zu bytes.", size);
         abort();
     }
 
-    nalloc += size;
+    nbytes += size;
     *(size_t *) newp = size;
 
     sf_log(SF_LOG_INFO, "sf_realloc: allocate %zu bytes.", size);
@@ -67,15 +70,17 @@ void sf_free(void *p) {
 
     sf_log(SF_LOG_INFO, "sf_free: free %zu bytes.", *real);
 
-    nalloc -= *real;
+    ++nfree;
+    nbytes -= *real;
 
     free(real);
 }
 
 sf_bool_t sf_memcheck(void) {
-    if (nalloc > 0) {
-        sf_log(SF_LOG_WARN, "sf_memcheck: %zu bytes in use.", nalloc);
-        SF_FALSE;
+    if (nbytes > 0) {
+        sf_log(SF_LOG_WARN, "sf_memcheck: %zu bytes in use."
+               " (%zu allocs and %zu frees)", nbytes, nalloc, nfree);
+        return SF_FALSE;
     }
 
     return SF_TRUE;

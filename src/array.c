@@ -5,6 +5,9 @@
 #include "sf/utils.h"
 
 
+#define SF_ARRAY_IDX_END -1
+
+
 static void sf_array_move_elts(sf_array_t *a, void *dst, void *src) {
     if (a->def.cpy) {
         a->def.cpy(dst, src);
@@ -50,6 +53,7 @@ void sf_array_clear(sf_array_t *a) {
 void sf_array_destroy(sf_array_t *a) {
     sf_array_clear(a);
     sf_free(a->elts);
+    sf_memzero(a, sizeof(*a));
 }
 
 void sf_array_grow(sf_array_t *a, uint32_t nalloc) {
@@ -81,6 +85,7 @@ void sf_array_push_front(sf_array_t *a, const void *elt) {
     sf_array_iter_t iter;
 
     sf_array_begin(a, &iter);
+    iter.idx = 0;
 
     return sf_array_insert(a, &iter, elt);
 }
@@ -98,6 +103,7 @@ void sf_array_pop_front(sf_array_t *a) {
     sf_array_iter_t iter;
 
     sf_array_begin(a, &iter);
+    iter.idx = 0;
 
     return sf_array_remove(a, &iter);
 }
@@ -119,18 +125,20 @@ void *sf_array_nth(sf_array_t *a, uint32_t nth) {
 sf_bool_t sf_array_begin(sf_array_t *a, sf_array_iter_t *iter) {
     iter->a     = a;
     iter->order = 1;
-    iter->idx   = 0;
     if (sf_array_cnt(a) == 0) {
+        iter->idx = SF_ARRAY_IDX_END;
         return SF_FALSE;
     }
+    iter->idx = 0;
     return SF_TRUE;
 }
 
 sf_bool_t sf_array_rbegin(sf_array_t *a, sf_array_iter_t *iter) {
     iter->a     = a;
     iter->order = -1;
+
     if (sf_array_cnt(a) == 0) {
-        iter->idx = -1;
+        iter->idx = SF_ARRAY_IDX_END;
         return SF_FALSE;
     }
 
@@ -208,12 +216,18 @@ void sf_array_remove(sf_array_t *a, sf_array_iter_t *iter) {
 }
 
 sf_bool_t sf_array_iter_next(sf_array_iter_t *iter) {
+    if (iter->idx == SF_ARRAY_IDX_END) {
+        return SF_FALSE;
+    }
+
     if (iter->order > 0) {
         if (++iter->idx >= sf_array_cnt(iter->a)) {
+            iter->idx = SF_ARRAY_IDX_END;
             return SF_FALSE;
         }
     } else {
-        if (iter->idx-- == 0 || iter->idx >= sf_array_cnt(iter->a)) {
+        if (iter->idx-- == 0 || iter->idx > sf_array_cnt(iter->a)) {
+            iter->idx = SF_ARRAY_IDX_END;
             return SF_FALSE;
         }
     }

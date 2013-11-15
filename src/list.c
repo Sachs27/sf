@@ -42,7 +42,9 @@ void sf_list_destroy(sf_list_t *l) {
         } while (sf_list_iter_next(&iter));
     }
 
-    return sf_pool_destroy(&l->pool);
+    sf_pool_destroy(&l->pool);
+
+    sf_memzero(l, sizeof(*l));
 }
 
 void sf_list_push(sf_list_t *l, const void *elt) {
