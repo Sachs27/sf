@@ -66,6 +66,11 @@ void sf_array_clear(sf_array_t *a);
 
 void sf_array_destroy(sf_array_t *a);
 
+/**
+ * Allocate n elements at the end of array, initialized to zero.
+ */
+void sf_array_alloc(sf_array_t *a, uint32_t n);
+
 void sf_array_grow(sf_array_t *a, uint32_t nalloc);
 
 void sf_array_push(sf_array_t *a, const void *elt);
