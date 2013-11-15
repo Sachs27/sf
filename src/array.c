@@ -57,13 +57,19 @@ void sf_array_destroy(sf_array_t *a) {
 }
 
 void sf_array_alloc(sf_array_t *a, uint32_t n) {
+    void    *p;
     uint32_t cnt = sf_array_cnt(a);
 
     cnt += n;
 
-    if (sf_array_cnt(a) < cnt) {
+    if (sf_array_nalloc(a) < cnt) {
         sf_array_grow(a, cnt);
     }
+
+    p = sf_array_nth(a, sf_array_cnt(a));
+    sf_memzero(p, a->def.size * n);
+
+    a->nelts += n;
 }
 
 void sf_array_grow(sf_array_t *a, uint32_t nalloc) {
