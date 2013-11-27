@@ -106,7 +106,7 @@ void *sf_pool_alloc(sf_pool_t *pool, size_t size) {
         /* node->last alwasy point to an aligned address.*/
         m = node->last;
 
-        if ((size_t) (node->end - m) >= size) {
+        if ((size_t) (node->end - m) > size) {
             node->last = m + size;
             node->last = SF_ALIGN_PTR(node->last, SF_ALIGNMENT);
             return m;
