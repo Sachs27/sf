@@ -11,7 +11,7 @@
 inline static void sf_pool_node_init(sf_pool_node_t *node, size_t size) {
     node->next = NULL;
     node->last = (uint8_t *) (node + 1);
-    node->end  = node->last + size;
+    node->end  = ((uint8_t *) node) + size;
 
     node->last = SF_ALIGN_PTR(node->last, SF_ALIGNMENT);
 }
@@ -68,7 +68,6 @@ sf_result_t sf_pool_init(sf_pool_t *pool, size_t max) {
     pool->large = NULL;
 
     sf_pool_node_init(pool->first, nsize);
-
     return SF_OK;
 }
 
@@ -106,7 +105,7 @@ void *sf_pool_alloc(sf_pool_t *pool, size_t size) {
         /* node->last alwasy point to an aligned address.*/
         m = node->last;
 
-        if ((size_t) (node->end - m) > size) {
+        if ((size_t) (node->end - m) >= size) {
             node->last = m + size;
             node->last = SF_ALIGN_PTR(node->last, SF_ALIGNMENT);
             return m;
