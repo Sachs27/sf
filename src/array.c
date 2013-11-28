@@ -89,7 +89,7 @@ void sf_array_grow(sf_array_t *a, uint32_t nalloc) {
     a->def.nalloc = nalloc;
 }
 
-void sf_array_push(sf_array_t *a, const void *elt) {
+void *sf_array_push(sf_array_t *a, const void *elt) {
     sf_array_iter_t iter;
 
     sf_array_end(a, &iter);
@@ -97,7 +97,7 @@ void sf_array_push(sf_array_t *a, const void *elt) {
     return sf_array_insert(a, &iter, elt);
 }
 
-void sf_array_push_front(sf_array_t *a, const void *elt) {
+void *sf_array_push_front(sf_array_t *a, const void *elt) {
     sf_array_iter_t iter;
 
     sf_array_begin(a, &iter);
@@ -168,11 +168,13 @@ void sf_array_end(sf_array_t *a, sf_array_iter_t *iter) {
     iter->idx   = a->nelts;
 }
 
-void sf_array_insert(sf_array_t *a, sf_array_iter_t *iter, const void *elt) {
+void *sf_array_insert(sf_array_t *a, sf_array_iter_t *iter, const void *elt) {
     uint32_t idx;
+    void *dst;
 
     if (iter->a != a) {
         sf_log(SF_LOG_ERR, "sf_array_next: Invalid iterator.");
+        return NULL;
     }
 
     if (sf_array_cnt(a) + 1 >= sf_array_nalloc(a)) {
@@ -190,14 +192,15 @@ void sf_array_insert(sf_array_t *a, sf_array_iter_t *iter, const void *elt) {
     }
 
     ++a->nelts;
-
+    dst = sf_array_nth(a, iter->idx);
     if (a->def.cpy) {
-        a->def.cpy(sf_array_nth(a, iter->idx), elt);
+        a->def.cpy(dst, elt);
     } else {
-        memcpy(sf_array_nth(a, iter->idx), elt, a->def.size);
+        memcpy(dst, elt, a->def.size);
     }
 
     ++iter->idx;
+    return dst;
 }
 
 void sf_array_remove(sf_array_t *a, sf_array_iter_t *iter) {

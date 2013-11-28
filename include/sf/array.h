@@ -73,9 +73,9 @@ void sf_array_alloc(sf_array_t *a, uint32_t n);
 
 void sf_array_grow(sf_array_t *a, uint32_t nalloc);
 
-void sf_array_push(sf_array_t *a, const void *elt);
+void *sf_array_push(sf_array_t *a, const void *elt);
 
-void sf_array_push_front(sf_array_t *a, const void *elt);
+void *sf_array_push_front(sf_array_t *a, const void *elt);
 
 void sf_array_pop(sf_array_t *a);
 
@@ -121,7 +121,7 @@ void sf_array_end(sf_array_t *a, sf_array_iter_t *iter);
  *
  * The new element will be inserted _behind_ the iter.
  */
-void sf_array_insert(sf_array_t *a, sf_array_iter_t *iter, const void *elt);
+void *sf_array_insert(sf_array_t *a, sf_array_iter_t *iter, const void *elt);
 
 /**
  * Remove the specity element from an array.

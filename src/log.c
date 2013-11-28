@@ -8,7 +8,7 @@
 
 
 #ifndef NDEBUG
-  static sf_log_level_t log_level = SF_LOG_INFO;
+  static sf_log_level_t log_level = SF_LOG_NLEVELS - 1;
 #else
   static sf_log_level_t log_level = SF_LOG_WARN;
 #endif /* NDEBUG */
@@ -45,6 +45,10 @@ sf_log_level_t sf_log_get_level(void) {
 
 sf_result_t sf_log(sf_log_level_t level, const char *fmt, ...) {
     va_list ap;
+
+    if (level > log_level) {
+        return SF_OK;
+    }
 
     va_start(ap, fmt);
     if (sf_logv(level, fmt, ap) != SF_OK) {

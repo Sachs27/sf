@@ -96,9 +96,9 @@ void sf_list_clear(sf_list_t *l);
 
 void sf_list_destroy(sf_list_t *l);
 
-void sf_list_push(sf_list_t *l, const void *elt);
+void *sf_list_push(sf_list_t *l, const void *elt);
 
-void sf_list_push_front(sf_list_t *l, const void *elt);
+void *sf_list_push_front(sf_list_t *l, const void *elt);
 
 void sf_list_pop(sf_list_t *l);
 
@@ -142,7 +142,7 @@ void sf_list_end(sf_list_t *l, sf_list_iter_t *iter);
  *
  * The new element will be inserted _behind_ the iter.
  */
-void sf_list_insert(sf_list_t *l, sf_list_iter_t *iter, const void *elt);
+void *sf_list_insert(sf_list_t *l, sf_list_iter_t *iter, const void *elt);
 
 /**
  * Remove the specity element from a list.

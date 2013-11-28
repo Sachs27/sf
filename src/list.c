@@ -47,7 +47,7 @@ void sf_list_destroy(sf_list_t *l) {
     sf_memzero(l, sizeof(*l));
 }
 
-void sf_list_push(sf_list_t *l, const void *elt) {
+void *sf_list_push(sf_list_t *l, const void *elt) {
     sf_list_iter_t iter;
 
     sf_list_end(l, &iter);
@@ -55,7 +55,7 @@ void sf_list_push(sf_list_t *l, const void *elt) {
     return sf_list_insert(l, &iter, elt);
 }
 
-void sf_list_push_front(sf_list_t *l, const void *elt) {
+void *sf_list_push_front(sf_list_t *l, const void *elt) {
     sf_list_iter_t iter;
 
     sf_list_begin(l, &iter);
@@ -131,7 +131,7 @@ void sf_list_end(sf_list_t *l, sf_list_iter_t *iter) {
     iter->cur   = &l->head;
 }
 
-void sf_list_insert(sf_list_t *l, sf_list_iter_t *iter, const void *elt) {
+void *sf_list_insert(sf_list_t *l, sf_list_iter_t *iter, const void *elt) {
     sf_list_node_t *prev = iter->cur->prev;
     sf_list_node_t *next = iter->cur;
     sf_list_node_t *node;
@@ -139,7 +139,7 @@ void sf_list_insert(sf_list_t *l, sf_list_iter_t *iter, const void *elt) {
 
     if (iter->l != l) {
         sf_log(SF_LOG_ERR, "sf_list_insert: Invalid iterator.");
-        return;
+        return NULL;
     }
 
     node = sf_pool_alloc(&l->pool, sizeof(*node) + l->def.size);
@@ -158,6 +158,8 @@ void sf_list_insert(sf_list_t *l, sf_list_iter_t *iter, const void *elt) {
     }
 
     ++l->nelts;
+
+    return dst;
 }
 
 void sf_list_remove(sf_list_t *l, sf_list_iter_t *iter) {
