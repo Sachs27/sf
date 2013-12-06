@@ -12,6 +12,9 @@ sf_result_t sf_list_init(sf_list_t *l, const sf_list_def_t *def) {
     }
 
     l->def = *def;
+    /* BUG: if l is alloc on the stack, and caller copy it to another space,
+     * l->head.next and l->head.prev will not equal to &l->head.
+     */
     l->head.prev = l->head.next = &l->head;
     l->nelts = 0;
 
