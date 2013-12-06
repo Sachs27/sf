@@ -17,8 +17,8 @@ static const char *log_labels[] = {
     "PANIC",
     "ERROR",
     "WARNING",
-    "DEBUG",
     "INFO",
+    "DEBUG",
 };
 
 static sf_log_func *log_func = NULL;
